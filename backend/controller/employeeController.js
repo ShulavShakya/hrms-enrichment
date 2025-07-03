@@ -14,7 +14,7 @@ const createEmployee = async (req, res) => {
       data: savedEmployee,
     });
   } catch (error) {
-    console.log("Error creating employee.");
+    console.log("Error creating employee:", error);
     res.status(500).json({
       success: false,
       message: "Error creating employee",
@@ -43,7 +43,6 @@ const getEmployees = async (req, res) => {
 const updateEmployees = async (req, res) => {
   try {
     const employees = await Employee.update();
-    
   } catch (error) {}
 };
 

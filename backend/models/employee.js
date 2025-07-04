@@ -1,15 +1,12 @@
 import { mongoose } from "mongoose";
 
 const employeeSchema = new mongoose.Schema({
-  firstName: {
+  name: {
     type: String,
     required: true,
     trim: true,
-  },
-  secondName: {
-    type: String,
-    required: true,
-    trim: true,
+    minlength: 2,
+    maxlength: 50,
   },
   email: {
     type: String,
@@ -32,7 +29,6 @@ const employeeSchema = new mongoose.Schema({
     type: String,
     required: true,
     minlength: 6,
-    trim: true,
   },
 });
 

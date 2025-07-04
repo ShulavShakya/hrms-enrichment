@@ -25,6 +25,9 @@ dbConnection
 import emp from "./routes/employeeRoutes.js";
 app.use("/api/employees", emp);
 
+import dep from "./routes/departmentRoute.js";
+app.use("/api/department", dep);
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });

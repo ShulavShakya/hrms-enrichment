@@ -40,10 +40,90 @@ const getEmployees = async (req, res) => {
   }
 };
 
-const updateEmployees = async (req, res) => {
+const getEmployeeById = async (req, res) => {
+  const { id } = req.params;
   try {
-    const employees = await Employee.update();
-  } catch (error) {}
+    const employee = await Employee.findById(id);
+
+    if (!employee) {
+      res.status(404).json({
+        success: false,
+        message: "Employee with that id doesnt exist",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Employee retrieved successfully",
+      data: employee,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error retriving employee",
+      error: error.message,
+    });
+  }
 };
 
-export { createEmployee, getEmployees };
+const deleteEmployeeById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const employee = await Employee.findByIdAndDelete(id);
+
+    if (!employee) {
+      res.status(404).json({
+        success: false,
+        message: "Employee not found",
+      });
+    }
+    res.status(200).json({
+      success: true,
+      message: "Employee deleted succesfully",
+      data: employee,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Employee not deleted",
+      error: error.message,
+    });
+  }
+};
+
+const updateEmployee = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedEmployee = await Employee.findByIdAndUpdate(id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!updatedEmployee) {
+      res.status(404).json({
+        success: false,
+        message: "Employee with that id not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Data updated successfully",
+      data: updatedEmployee,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Data couldnt be updated",
+      error: error.message,
+    });
+  }
+};
+
+export {
+  createEmployee,
+  getEmployees,
+  getEmployeeById,
+  deleteEmployeeById,
+  updateEmployee,
+};

@@ -10,9 +10,7 @@ const port = 3000;
 app.use(express.json());
 
 const MONGODB_URL = process.env.MONGODB_URI;
-
 const dbConnection = mongoose.connect(MONGODB_URL);
-
 dbConnection
   .then(() => {
     console.log("Connected to MongoDB Successfully");
@@ -27,6 +25,9 @@ app.use("/api/employees", emp);
 
 import dep from "./routes/departmentRoute.js";
 app.use("/api/department", dep);
+
+import att from "./routes/attendanceRoute.js";
+app.use("/api/attendance", att);
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);

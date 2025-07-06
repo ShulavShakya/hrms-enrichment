@@ -3,7 +3,6 @@ import bcrypt from "bcryptjs";
 
 const createEmployee = async (req, res) => {
   try {
-    const employee = new Employee(req.body);
     const hashedPassword = await bcrypt.hash(employee.password, 10);
     employee.password = hashedPassword;
     const savedEmployee = await employee.save();

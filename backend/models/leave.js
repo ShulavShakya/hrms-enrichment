@@ -2,11 +2,13 @@ import { mongoose } from "mongoose";
 
 const leaveSchema = new mongoose.Schema({
   userId: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
   },
   type: {
     type: String,
-    enum: ["sick", "casual", "earned"],
+    enum: ["sick", "casual", "earned", "maternity", "paternity"],
     required: true,
   },
   dateFrom: {
@@ -25,6 +27,21 @@ const leaveSchema = new mongoose.Schema({
   status: {
     type: String,
     enum: ["pending", "approved", "rejected"],
+    default: "pending",
+  },
+  approvedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user",
+  },
+  rejectionReason: {
+    type: String,
+  },
+  appliedAt: {
+    type: Date,
+    default: Date.now,
+  },
+  processedAt: {
+    type: Date,
   },
 });
 

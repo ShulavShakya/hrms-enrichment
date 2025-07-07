@@ -1,1 +1,5 @@
-import Payroll from "../models/payrollModel.js";
+import Payroll from "../models/payroll.js";
+
+const createPayroll = async (req, res) => {};
+
+export default createPayroll;

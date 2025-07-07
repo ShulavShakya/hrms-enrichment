@@ -8,14 +8,14 @@ const createEmployee = async (req, res) => {
     const savedEmployee = await employee.save();
 
     res.status(201).json({
-      success: true,
+      status: true,
       message: "Employee created succesfully.",
       data: savedEmployee,
     });
   } catch (error) {
     console.log("Error creating employee:", error);
     res.status(500).json({
-      success: false,
+      status: false,
       message: "Error creating employee",
       error: error.message,
     });
@@ -26,7 +26,7 @@ const getEmployees = async (req, res) => {
   try {
     const employees = await Employee.find();
     res.status(200).json({
-      success: true,
+      status: true,
       message: "Employee retrieved successfully.",
       data: employees,
     });
@@ -45,20 +45,20 @@ const getEmployeeById = async (req, res) => {
     const employee = await Employee.findById(id);
 
     if (!employee) {
-      res.status(404).json({
-        success: false,
+      res.status(400).json({
+        status: false,
         message: "Employee with that id doesnt exist",
       });
     }
 
     res.status(200).json({
-      success: true,
+      status: true,
       message: "Employee retrieved successfully",
       data: employee,
     });
   } catch (error) {
     res.status(500).json({
-      success: false,
+      status: false,
       message: "Error retriving employee",
       error: error.message,
     });
@@ -71,19 +71,19 @@ const deleteEmployeeById = async (req, res) => {
     const employee = await Employee.findByIdAndDelete(id);
 
     if (!employee) {
-      res.status(404).json({
-        success: false,
+      res.status(400).json({
+        status: false,
         message: "Employee not found",
       });
     }
     res.status(200).json({
-      success: true,
+      status: true,
       message: "Employee deleted succesfully",
       data: employee,
     });
   } catch (error) {
     res.status(500).json({
-      success: false,
+      status: false,
       message: "Employee not deleted",
       error: error.message,
     });
@@ -99,20 +99,20 @@ const updateEmployee = async (req, res) => {
     });
 
     if (!updatedEmployee) {
-      res.status(404).json({
-        success: false,
+      res.status(400).json({
+        status: false,
         message: "Employee with that id not found",
       });
     }
 
     res.status(200).json({
-      success: true,
+      status: true,
       message: "Data updated successfully",
       data: updatedEmployee,
     });
   } catch (error) {
     res.status(500).json({
-      success: false,
+      status: false,
       message: "Data couldnt be updated",
       error: error.message,
     });

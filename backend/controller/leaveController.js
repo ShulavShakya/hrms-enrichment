@@ -1,7 +1,5 @@
-import Leave from "../models/leaveModel.js";
+import Leave from "../models/leave.js";
 
-const createLeave = async (req, res) => {
-  try {
-    // const leave = new
-  } catch (error) {}
-};
+const createLeave = async (req, res) => {};
+
+export default createLeave;

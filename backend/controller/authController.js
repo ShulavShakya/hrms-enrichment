@@ -5,7 +5,6 @@ import bcrypt from "bcryptjs";
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-
     const employee = await Employee.findOne({ email }).select("+password");
     if (!employee) {
       res.status(404).json({
@@ -14,7 +13,7 @@ const login = async (req, res) => {
       });
     }
 
-    const isMatch = await bcrypt.compare(password, employee.password);
+    const isMatch = await bcrypt.compare(password, String(employee.password));
     if (!isMatch) {
       res.status(400).json({
         status: false,
@@ -23,17 +22,15 @@ const login = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { id: employee_id, email: employee.email },
+      { id: employee.id, email: employee.email },
       "my-secret-is-my-secret-none-of-your-secret",
       { expiresIn: "1hr" }
     );
-
     res.cookie("token", token, {
       httpOnly: true,
       expires: new Date(Date.now() + 3000000),
       secure: process.env.NODE_ENV === "production",
     });
-
     res.status(200).json({
       status: true,
       message: "Logged in successfully",

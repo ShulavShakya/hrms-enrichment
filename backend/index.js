@@ -1,6 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import routes from "./routes/index.js";
 
 dotenv.config();
 
@@ -20,23 +21,7 @@ dbConnection
     process.exit(1);
   });
 
-import emp from "./routes/employeeRoutes.js";
-app.use("/api/employees", emp);
-
-import dep from "./routes/departmentRoute.js";
-app.use("/api/department", dep);
-
-import att from "./routes/attendanceRoute.js";
-app.use("/api/attendance", att);
-
-import leave from "./routes/leaveRoute.js";
-app.use("/api/leave", leave);
-
-import pay from "./routes/payrollRoute.js";
-app.use("/api/pay", pay);
-
-import authRoutes from "./routes/authRoutes.js";
-app.use("/api/auth", authRoutes);
+app.use("/api", routes);
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);

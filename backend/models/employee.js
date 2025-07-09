@@ -1,4 +1,4 @@
-import { mongoose } from "mongoose";
+import { mongo, mongoose } from "mongoose";
 
 const employeeSchema = new mongoose.Schema({
   name: {
@@ -19,16 +19,45 @@ const employeeSchema = new mongoose.Schema({
       "Please fill a valid email address",
     ],
   },
-  phone: {
-    type: String,
-    required: true,
-    trim: true,
-    match: [/^[\+]?[1-9][\d]{0,15}$/, "Please enter a valid phone number"],
-  },
   password: {
     type: String,
     required: true,
     minlength: 6,
+  },
+  role: {
+    type: String,
+    enum: ["admin", "manager", "employee"],
+    default: "employee",
+  },
+  department: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "department",
+  },
+  designation: {
+    type: String,
+    trim: true,
+  },
+  salary: {
+    type: Number,
+    min: 0,
+  },
+  profileImage: {
+    type: String,
+  },
+  phoneNumber: {
+    type: String,
+    match: /^\d(10, 15)$/,
+  },
+  address: {
+    type: String,
+  },
+  dateOfJoining: {
+    type: Date,
+    default: Date.now,
+  },
+  isActive: {
+    type: Boolean,
+    default: true,
   },
 });
 

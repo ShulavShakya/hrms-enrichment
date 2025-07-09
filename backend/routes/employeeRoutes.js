@@ -6,10 +6,12 @@ import {
   deleteEmployeeById,
   updateEmployee,
 } from "../controller/employeeController.js";
+import { authenticateToken, checkRoles } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/", createEmployee);
+router.post("/", [authenticateToken, checkRoles(["admin"])], createEmployee);
+// router.post("/", createEmployee);
 router.get("/", getEmployees);
 router.get("/:id", getEmployeeById);
 router.delete("/:id", deleteEmployeeById);

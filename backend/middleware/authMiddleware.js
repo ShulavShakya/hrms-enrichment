@@ -28,9 +28,9 @@ const authenticateToken = async (req, res, next) => {
   }
 };
 
-const checkRoles = (...allowedRoles) => {
+const checkRoles = (roles) => {
   return async (req, res, next) => {
-    if (!allowedRoles.includes(req.employee.role)) {
+    if (!req.employee || !roles.includes(req.employee.role)) {
       return res.status(403).json({
         status: false,
         message: "Access denied",

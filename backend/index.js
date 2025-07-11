@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import routes from "./routes/index.js";
 import cookieParser from "cookie-parser";
+import bcrypt from "bcryptjs";
+import Employee from "./models/employee.js";
 
 dotenv.config();
 
@@ -22,6 +24,24 @@ dbConnection
     console.error("Error connecting to MongoDB: ", error);
     process.exit(1);
   });
+
+const seedAdmin = async () => {
+  try {
+    const admin = await Employee.findOne({ email: "admin@gmail.com" });
+    if (!admin) {
+      const hashedPassword = await bcrypt.hash("admin", 10);
+      await Employee.create({
+        name: "Admin",
+        email: "admin@gmail.com",
+        password: hashedPassword,
+        role: "admin",
+      });
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+seedAdmin();
 
 app.use("/api", routes);
 

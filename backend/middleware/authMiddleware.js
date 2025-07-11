@@ -8,7 +8,7 @@ const authenticateToken = async (req, res, next) => {
     const token = req.cookies.token;
 
     if (!token) {
-      res.status("401").json({
+      res.status(401).json({
         status: false,
         message: "Unauthorized",
       });
@@ -30,7 +30,7 @@ const authenticateToken = async (req, res, next) => {
 
 const checkRoles = (roles) => {
   return async (req, res, next) => {
-    if (!req.employee || !roles.includes(req.employee.role)) {
+    if (!roles.includes(req.employee.role)) {
       return res.status(403).json({
         status: false,
         message: "Access denied",

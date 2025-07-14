@@ -59,6 +59,10 @@ const employeeSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
+  profileImage: {
+    type: String,
+    default: " ",
+  },
 });
 
 const Employee = mongoose.model("Employee", employeeSchema);

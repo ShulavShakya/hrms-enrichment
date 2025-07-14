@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const login = async (req, res) => {
+export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const employee = await Employee.findOne({ email }).select("+password");
@@ -23,10 +23,14 @@ const login = async (req, res) => {
         message: "Invalid email or password",
       });
     }
-    const key = process.env.KEY;
-    const token = jwt.sign({ id: employee._id, email: employee.email }, key, {
-      expiresIn: "1hr",
-    });
+    const token = jwt.sign(
+      { id: employee._id, email: employee.email },
+      process.env.KEY,
+      {
+        expiresIn: "1hr",
+      }
+    );
+
     res.cookie("token", token, {
       httpOnly: true,
       expires: new Date(Date.now() + 3000000),
@@ -45,5 +49,3 @@ const login = async (req, res) => {
     });
   }
 };
-
-export { login };

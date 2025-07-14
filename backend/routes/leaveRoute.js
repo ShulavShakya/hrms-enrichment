@@ -1,7 +1,7 @@
 import express from "express";
-const router = express.Router();
+import { createLeave } from "../controller/leaveController.js";
 
-import createLeave from "../controller/leaveController.js";
+const router = express.Router();
 
 router.post("/", createLeave);
 

@@ -1,6 +1,6 @@
 import Attendance from "../models/attendance.js";
 
-const markAttendance = async (req, res) => {
+export const markAttendance = async (req, res) => {
   try {
     const attendance = new Attendance(req.body);
     const savedAttendance = await attendance.save();
@@ -19,9 +19,9 @@ const markAttendance = async (req, res) => {
   }
 };
 
-const getAllAttendance = async (req, res) => {
+export const getAllAttendance = async (req, res) => {
   try {
-    const attendance = await Attendance.find();
+    const attendance = await Attendance.find().populate("userId");
     if (attendance.length === 0) {
       return res.status(400).json({
         status: false,
@@ -42,10 +42,10 @@ const getAllAttendance = async (req, res) => {
   }
 };
 
-const getAttendanceById = async (req, res) => {
+export const getAttendanceById = async (req, res) => {
   const { id } = req.params;
   try {
-    const attendance = await Attendance.findById({ id });
+    const attendance = await Attendance.findById({ id }).populate("userId");
     if (!attendance) {
       res.status(400).json({
         status: false,
@@ -53,7 +53,7 @@ const getAttendanceById = async (req, res) => {
       });
       res.status(200).json({
         status: true,
-        message: "Attendance for the following employee retrieved successfully",
+        message: `Attendance for employee number ${id} retrieved successfully`,
         data: attendance,
       });
     }
@@ -66,4 +66,56 @@ const getAttendanceById = async (req, res) => {
   }
 };
 
-export { markAttendance, getAllAttendance, getAttendanceById };
+export const deleteAttendance = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const attendance = await Attendance.findByIdAndDelete(id);
+    if (!attendance) {
+      res.status(401).json({
+        status: false,
+        message: "Attendance not found",
+      });
+
+      res.status(200).json({
+        status: true,
+        message: "Attendance successfully deleted",
+        data: attendance,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      status: false,
+      message: "Attendance couldn't be deleted",
+      error: error.message,
+    });
+  }
+};
+
+export const updateAttendance = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const updatedAttendance = await Attendance.findByIdAndUpdate(id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!updatedAttendance) {
+      return res.status(400).json({
+        status: false,
+        message: "Attendance not found",
+      });
+    }
+
+    res.status(200).json({
+      status: true,
+      message: "Attendance updated successfully",
+      data: updatedAttendance,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: false,
+      message: "Attendance couldn't be updated",
+      error: error.message,
+    });
+  }
+};

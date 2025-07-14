@@ -1,6 +1,6 @@
 import Department from "../models/department.js";
 
-const createDepartment = async (req, res) => {
+export const createDepartment = async (req, res) => {
   try {
     const department = new Department(req.body);
     const savedDepartment = await department.save();
@@ -18,9 +18,9 @@ const createDepartment = async (req, res) => {
   }
 };
 
-const getDepartment = async (req, res) => {
+export const getDepartment = async (req, res) => {
   try {
-    const department = await Department.find();
+    const department = await Department.find().populate("head");
     if (department.length === 0) {
       return res.status(404).json({
         status: false,
@@ -41,10 +41,10 @@ const getDepartment = async (req, res) => {
   }
 };
 
-const getDepartmentById = async (req, res) => {
+export const getDepartmentById = async (req, res) => {
   const { id } = req.params;
   try {
-    const department = await Department.findById(id);
+    const department = await Department.findById(id).populate("head");
 
     if (!department) {
       res.status(404).json({
@@ -66,7 +66,7 @@ const getDepartmentById = async (req, res) => {
   }
 };
 
-const deleteDepartment = async (req, res) => {
+export const deleteDepartment = async (req, res) => {
   const { id } = req.params;
   try {
     const department = await Department.findByIdAndDelete(id);
@@ -90,4 +90,30 @@ const deleteDepartment = async (req, res) => {
   }
 };
 
-export { createDepartment, getDepartment, getDepartmentById, deleteDepartment };
+export const updateDepartment = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedDepartment = Department.findByIdAndUpdate(id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!updatedDepartment) {
+      return res.status(400).json({
+        status: false,
+        message: "Department not found",
+      });
+    }
+    res.status(200).json({
+      status: true,
+      message: "Department updated successfully",
+      data: updatedDepartment,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: false,
+      message: "Department couldn't be updated.",
+      error: error.message,
+    });
+  }
+};

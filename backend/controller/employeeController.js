@@ -1,29 +1,42 @@
 import Employee from "../models/employee.js";
 import bcrypt from "bcryptjs";
 
-const createEmployee = async (req, res) => {
+export const createEmployee = async (req, res) => {
   try {
-    const employee = new Employee(req.body);
-    const hashedPassword = await bcrypt.hash(employee.password, 10);
-    employee.password = hashedPassword;
+    const { password, ...otherFields } = req.body;
+
+    if (!password) {
+      return res.status(400).json({
+        success: false,
+        message: "Password is required",
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const employee = new Employee({
+      ...otherFields,
+      password: hashedPassword,
+      profileImage: req.file.filename, // save uploaded image filename
+    });
+
     const savedEmployee = await employee.save();
 
     res.status(201).json({
-      status: true,
-      message: "Employee created succesfully.",
+      success: true,
+      message: "Employee created successfully",
       data: savedEmployee,
     });
   } catch (error) {
-    console.log("Error creating employee:", error);
+    console.error("Error creating employee:", error);
     res.status(500).json({
-      status: false,
+      success: false,
       message: "Error creating employee",
       error: error.message,
     });
   }
 };
 
-const getEmployees = async (req, res) => {
+export const getEmployees = async (req, res) => {
   try {
     const employees = await Employee.find();
     res.status(200).json({
@@ -40,7 +53,7 @@ const getEmployees = async (req, res) => {
   }
 };
 
-const getEmployeeById = async (req, res) => {
+export const getEmployeeById = async (req, res) => {
   const { id } = req.params;
   try {
     const employee = await Employee.findById(id);
@@ -66,7 +79,7 @@ const getEmployeeById = async (req, res) => {
   }
 };
 
-const deleteEmployeeById = async (req, res) => {
+export const deleteEmployeeById = async (req, res) => {
   const { id } = req.params;
   try {
     const employee = await Employee.findByIdAndDelete(id);
@@ -91,16 +104,19 @@ const deleteEmployeeById = async (req, res) => {
   }
 };
 
-const updateEmployee = async (req, res) => {
+export const updateEmployee = async (req, res) => {
   try {
     const { id } = req.params;
-    const updatedEmployee = await Employee.findByIdAndUpdate(id, req.body, {
+    const updates = { ...req.body };
+    delete updates.password;
+
+    const updatedEmployee = await Employee.findByIdAndUpdate(id, updates, {
       new: true,
       runValidators: true,
     });
 
     if (!updatedEmployee) {
-      res.status(400).json({
+      return res.status(400).json({
         status: false,
         message: "Employee with that id not found",
       });
@@ -118,12 +134,4 @@ const updateEmployee = async (req, res) => {
       error: error.message,
     });
   }
-};
-
-export {
-  createEmployee,
-  getEmployees,
-  getEmployeeById,
-  deleteEmployeeById,
-  updateEmployee,
 };

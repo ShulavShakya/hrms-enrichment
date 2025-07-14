@@ -14,8 +14,7 @@ const authenticateToken = async (req, res, next) => {
       });
     }
 
-    const key = process.env.KEY;
-    const decoded = jwt.verify(token, key);
+    const decoded = jwt.verify(token, process.env.KEY);
 
     req.employee = await Employee.findById(decoded.id).select("-password");
     next();

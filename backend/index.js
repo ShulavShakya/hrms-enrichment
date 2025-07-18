@@ -5,6 +5,7 @@ import routes from "./routes/index.js";
 import cookieParser from "cookie-parser";
 import bcrypt from "bcryptjs";
 import Employee from "./models/employee.js";
+import cors from "cors";
 
 dotenv.config();
 
@@ -13,6 +14,13 @@ const port = 3000;
 
 app.use(express.json());
 app.use(cookieParser());
+app.use("/uploads", express.static("uploads"));
+app.use(
+  cors({
+    origin: "*",
+    credentials: true,
+  })
+);
 
 const MONGODB_URL = process.env.MONGODB_URI;
 const dbConnection = mongoose.connect(MONGODB_URL);

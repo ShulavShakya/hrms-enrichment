@@ -1,8 +1,6 @@
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
 import Employee from "../models/employee.js";
 
-dotenv.config();
 const authenticateToken = async (req, res, next) => {
   try {
     const token = req.cookies.token;

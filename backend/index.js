@@ -17,7 +17,7 @@ app.use(cookieParser());
 app.use("/uploads", express.static("uploads"));
 app.use(
   cors({
-    origin: "*",
+    origin: "https://localhost:5173",
     credentials: true,
   })
 );

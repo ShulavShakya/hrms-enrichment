@@ -15,7 +15,7 @@ router.post(
   [authenticateToken, checkRoles(["admin", "manager"]), upload.single("image")],
   createEmployee
 );
-router.get("/", [authenticateToken], getEmployees);
+router.get("/get", [authenticateToken], getEmployees);
 router.get("/:id", [authenticateToken], getEmployeeById);
 router.delete(
   "/:id",

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { BASE_URL } from "../utils/config.js";
+import Cookies from "js-cookie";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -14,13 +14,31 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post(`https://localhost:3000/api/login`, {
+      const res = await axios.post(`http://localhost:3000/api/auth/login`, {
         email,
         password,
       });
 
-      localStorage.setItem("token", res.data.data.token);
-      localStorage.setItem("user", JSON.stringify(res.data.data.employee));
+      const { token, employee } = res.data.data;
+      console.log(token);
+      console.log(employee);
+
+      Cookies.set("token", token, {
+        expires: 1,
+        secure: false,
+        sameSite: "Lax",
+        path: "/",
+      });
+
+      Cookies.set("user", JSON.stringify(employee), {
+        expires: 1,
+        secure: false,
+        sameSite: "Lax",
+        path: "/",
+      });
+
+      // localStorage.setItem("token", res.data.data.token);
+      // localStorage.setItem("user", JSON.stringify(res.data.data.employee));
 
       toast.success("Login successfull", {
         position: "top-right",
@@ -29,6 +47,7 @@ const Login = () => {
       });
 
       navigate("/admin-dashboard");
+      localStorage.setItem("token", res.data.data.token);
     } catch (error) {
       const message =
         error.response?.data?.message ||

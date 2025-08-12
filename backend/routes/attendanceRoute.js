@@ -9,8 +9,8 @@ import {
 
 const router = express.Router();
 
-router.post("/", markAttendance);
-router.get("/", getAllAttendance);
+router.post("/create", markAttendance);
+router.get("/get", getAllAttendance);
 router.get("/:id", getAttendanceById);
 router.delete("/:id", deleteAttendance);
 router.put("/:id", updateAttendance);

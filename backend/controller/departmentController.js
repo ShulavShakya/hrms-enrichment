@@ -46,7 +46,7 @@ export const getDepartment = async (req, res) => {
 export const getDepartmentById = async (req, res) => {
   const { id } = req.params;
   try {
-    const department = await Department.findById(id).populate("head");
+    const department = await Department.findById(id);
 
     if (!department) {
       res.status(404).json({

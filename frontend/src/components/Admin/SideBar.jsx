@@ -1,13 +1,24 @@
 import React from "react";
+import Cookies from "js-cookie";
 
 const SideBar = ({ activeTab, setActiveTab }) => {
-  const sidebarItems = [
-    { id: "dashboard", name: "Dashboard" },
-    { id: "employees", name: "Employees" },
-    { id: "departments", name: "Departments" },
-    { id: "attendance", name: "Attendance" },
-    { id: "leave-requests", name: "Leave Requests" },
-  ];
+  const user = JSON.parse(Cookies.get("user") || "{}");
+  const role = user.role;
+
+  const sidebarItems =
+    role === "admin"
+      ? [
+          { id: "dashboard", name: "Dashboard" },
+          { id: "employees", name: "Employees" },
+          { id: "departments", name: "Departments" },
+          { id: "attendance", name: "Attendance" },
+          { id: "leave-requests", name: "Leave Requests" },
+        ]
+      : [
+          { id: "dashboard", name: "Dashboard" },
+          { id: "attendance", name: "Attendance" },
+          { id: "profile", name: "Profile" },
+        ];
 
   return (
     <div className="w-64 bg-white shadow-lg">

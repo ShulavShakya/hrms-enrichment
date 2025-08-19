@@ -8,7 +8,6 @@ const DepartmentManager = () => {
     name: "",
     description: "",
     budget: "",
-    head: "",
   });
   const [editingId, setEditingId] = useState(null);
 
@@ -52,7 +51,7 @@ const DepartmentManager = () => {
       });
 
       fetchDepartments();
-      setFormData({ name: "", description: "", budget: "", head: "" });
+      setFormData({ name: "", description: "", budget: "" });
       setEditingId(null);
     } catch (err) {
       toast.error(err, {
@@ -68,7 +67,6 @@ const DepartmentManager = () => {
       name: dept.name || "",
       description: dept.description || "",
       budget: dept.budget || "",
-      head: dept.head || "",
     });
     setEditingId(dept._id);
   };
@@ -169,7 +167,7 @@ const DepartmentManager = () => {
                 <td className="border px-4 py-2">{dept.name}</td>
                 <td className="border px-4 py-2">{dept.description}</td>
                 <td className="border px-4 py-2">{dept.budget}</td>
-                <td className="border px-4 py-2 flex gap-2 justify-center">
+                <td className="px-4 py-2 flex gap-2 justify-center border">
                   <button
                     onClick={() => handleEdit(dept)}
                     className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600"

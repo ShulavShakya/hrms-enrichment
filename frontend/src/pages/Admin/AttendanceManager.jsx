@@ -107,10 +107,16 @@ const AttendanceManager = () => {
       toast.success("Deleted successfully 🎉", {
         position: "top-right",
         autoClose: 2000,
+        hideProgressBar: false,
       });
       fetchAttendance();
     } catch (err) {
       console.error(err);
+      toast.error("Couldnt be deleted", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+      });
     }
   };
 
@@ -136,7 +142,7 @@ const AttendanceManager = () => {
         onSubmit={handleSubmit}
         className="bg-white p-6 rounded-lg shadow-md space-y-4"
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-fit">
           <select
             name="userId"
             value={formData.userId}

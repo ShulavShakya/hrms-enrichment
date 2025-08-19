@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-axios.defaults.withCredentials = true;
+import { privateAPI } from "../../utils/config";
 
 const EmployeeManager = () => {
   const [employees, setEmployees] = useState([]);
@@ -21,25 +21,6 @@ const EmployeeManager = () => {
   });
   const [editingId, setEditingId] = useState(null);
 
-  // useEffect(() => {
-  //   const checkLogin = () => {
-  //     const token = localStorage.getItem("token");
-  //     if (!token) {
-  //       toast.error("Please log in first", {
-  //         position: "top-right",
-  //         autoClose: 2000,
-  //         hideProgressBar: false,
-  //       });
-  //       return false;
-  //     }
-  //     return true;
-  //   };
-
-  //   if (checkLogin()) {
-  //     fetchEmployees();
-  //     fetchDepartments();
-  //   }
-  // }, []);
   useEffect(() => {
     fetchDepartments();
     fetchEmployees();
@@ -47,29 +28,7 @@ const EmployeeManager = () => {
 
   const fetchEmployees = async () => {
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        console.error("No token found");
-        toast.error("Not logged in. Please log in first.", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-        });
-        return;
-      }
-
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      };
-
-      const res = await axios.get(
-        "http://localhost:3000/api/employees/get",
-        config,
-        { withCredentials: true }
-      );
+      const res = await privateAPI.get("/employees/get");
       setEmployees(res.data.data);
     } catch (err) {
       console.error("API Error:", err.response?.data || err.message);
@@ -83,9 +42,7 @@ const EmployeeManager = () => {
 
   const fetchDepartments = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/api/department/get", {
-        withCredentials: true,
-      });
+      const res = await privateAPI.get("/department/get");
       setDepartments(res.data.data);
     } catch (err) {
       console.error(err);
@@ -210,7 +167,7 @@ const EmployeeManager = () => {
         onSubmit={handleSubmit}
         className="bg-white p-4 rounded shadow mb-6"
       >
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 w-fit">
           <input
             type="text"
             name="name"
@@ -345,7 +302,7 @@ const EmployeeManager = () => {
       {/* Table */}
       <div className="bg-white p-4 rounded shadow">
         <h3 className="text-lg font-semibold mb-4">Employee List</h3>
-        <table className="w-full table-auto border">
+        <table className="w-full table-auto border ">
           <thead>
             <tr className="bg-gray-100">
               <th className="border px-4 py-2">Name</th>

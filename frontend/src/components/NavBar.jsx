@@ -1,17 +1,17 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 export default function NavBar() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    Cookies.remove("token");
+    Cookies.remove("user");
     navigate("/");
   };
 
-  if (!localStorage.getItem("token") && !localStorage.getItem("user"))
-    return null;
+  if (!Cookies.get("token") && !Cookies.get("user")) return null;
 
   return (
     <nav className="relative p-4 bg-gray-800 text-white flex items-center justify-center">

@@ -3,6 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { privateAPI } from "../utils/config";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -14,40 +15,29 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post(`http://localhost:3000/api/auth/login`, {
-        email,
-        password,
-      });
+      const res = await privateAPI.post(
+        "/auth/login",
+        { email, password },
+        { withCredentials: true }
+      );
 
-      const { token, employee } = res.data.data;
-      console.log(token);
+      const employee = res.data.employee;
+      Cookies.set("user", JSON.stringify(employee));
+
+      // console.log(token);
       console.log(employee);
 
-      Cookies.set("token", token, {
-        expires: 1,
-        secure: false,
-        sameSite: "Lax",
-        path: "/",
-      });
-
-      Cookies.set("user", JSON.stringify(employee), {
-        expires: 1,
-        secure: false,
-        sameSite: "Lax",
-        path: "/",
-      });
-
-      // localStorage.setItem("token", res.data.data.token);
-      // localStorage.setItem("user", JSON.stringify(res.data.data.employee));
-
-      toast.success("Login successfull", {
+      toast.success("Login successful", {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
       });
 
-      navigate("/admin-dashboard");
-      localStorage.setItem("token", res.data.data.token);
+      if (employee.role === "admin") {
+        navigate("/admin-dashboard");
+      } else if (employee.role === "employee") {
+        navigate("/employee-dashboard");
+      }
     } catch (error) {
       const message =
         error.response?.data?.message ||

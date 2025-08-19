@@ -7,7 +7,7 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
     const employee = await Employee.findOne({ email }).select("+password");
     if (!employee) {
-      res.status(404).json({
+      return res.status(404).json({
         status: false,
         message: "Invalid email or password",
       });
@@ -15,7 +15,7 @@ export const login = async (req, res) => {
 
     const isMatch = await bcrypt.compare(password, String(employee.password));
     if (!isMatch) {
-      res.status(400).json({
+      return res.status(400).json({
         status: false,
         message: "Invalid email or password",
       });
@@ -24,19 +24,22 @@ export const login = async (req, res) => {
       { id: employee._id, email: employee.email },
       process.env.KEY,
       {
-        expiresIn: "1hr",
+        expiresIn: "1h",
       }
     );
 
     res.cookie("token", token, {
       httpOnly: true,
-      expires: new Date(Date.now() + 3000000),
+      expires: new Date(Date.now() + 3600000),
       secure: process.env.NODE_ENV === "production",
     });
+
+    const { password: pass, ...empData } = employee._doc;
     return res.status(200).json({
       status: true,
       message: "Logged in successfully",
       data: token,
+      employee: { email, ...empData },
     });
   } catch (error) {
     res.status(500).json({

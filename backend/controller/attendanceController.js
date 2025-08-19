@@ -21,7 +21,7 @@ export const markAttendance = async (req, res) => {
 
 export const getAllAttendance = async (req, res) => {
   try {
-    const attendance = await Attendance.find().populate("userId");
+    const attendance = await Attendance.find();
     if (attendance.length === 0) {
       return res.status(400).json({
         status: false,

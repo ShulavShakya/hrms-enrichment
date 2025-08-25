@@ -1,9 +1,10 @@
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import Login from "./pages/Login.jsx";
-import Dashboard from "./pages/Dashboard.jsx";
+// import Dashboard from "./pages/Dashboard.jsx";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import ProtectedRoutes from "./utils/ProtectedRoutes.jsx";
+import EmployeeDashboard from "./pages/Employee/EmployeeDashboard.jsx";
 
 function App() {
   return (
